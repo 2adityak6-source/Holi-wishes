@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>रंगीन होली 2026</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            /* शुरुआत में हल्का बैकग्राउंड */
+            background-color: #ffffff; 
+            transition: background-color 0.8s ease; /* रंग बदलने का स्मूथ ट्रांजिशन */
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        /* पिचकारी और गुलाल */
+        .item {
+            position: absolute;
+            font-size: 60px;
+            z-index: 5;
+            filter: drop-shadow(3px 3px 10px rgba(0,0,0,0.2));
+            user-select: none;
+        }
+        .p1 { top: 10%; left: 5%; transform: rotate(-15deg); }
+        .p2 { bottom: 10%; right: 5%; transform: rotate(165deg); }
+        .g1 { bottom: 10%; left: 8%; }
+        .g2 { top: 10%; right: 8%; }
+
+        .card {
+            position: relative;
+            z-index: 20;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px 20px;
+            border-radius: 30px;
+            text-align: center;
+            width: 85%;
+            max-width: 420px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            border: 5px solid #ff007f;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin: 10px 0;
+            color: #ff007f;
+            text-shadow: 2px 2px #ffd700;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .wish { font-size: 1.2rem; color: #333; font-weight: bold; }
+
+        input {
+            width: 80%;
+            padding: 12px;
+            border: 2px solid #ff007f;
+            border-radius: 50px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        button {
+            background: #ff007f;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        /* पेंट के धब्बे */
+        .paint {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            animation: splash 0.6s ease-out forwards;
+        }
+
+        @keyframes splash {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0.7; }
+        }
+
+        #linkBox {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            word-wrap: break-word;
+            color: #d81b60;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="item p1">🔫</div>
+    <div class="item p2">🔫</div>
+    <div class="item g1">🥣</div>
+    <div class="item g2">🥣</div>
+
+    <div class="card">
+        <h2 id="from">नमस्ते!</h2>
+        <h1>Happy Holi!</h1>
+        <p class="wish">बुरा न मानो होली है!</p>
+        <p>रंगों की बौछार के लिए कहीं भी क्लिक करें!</p>
+
+        <input type="text" id="name" placeholder="अपना नाम लिखें">
+        <br>
+        <button onclick="createLink()">जादुई लिंक बनाएँ</button>
+        <div id="linkBox"></div>
+    </div>
+
+    <script>
+        const holiColors = [
+            '#FFF5F8', '#F0FDFF', '#FFFDF0', // हल्के कलर्स
+            '#FFEBEE', '#E3F2FD', '#F1F8E9', 
+            '#FFF3E0', '#F3E5F5', '#E0F2F1'
+        ];
+
+        const splashColors = ['#FF007F', '#FFD700', '#00E5FF', '#39FF14', '#FF4500', '#8A2BE2'];
+
+        // 1. नाम चेक करें
+        const params = new URLSearchParams(window.location.search);
+        const sender = params.get('naam');
+        if (sender) {
+            document.getElementById('from').innerText = decodeURIComponent(sender) + " की तरफ से...";
+        }
+
+        // 2. क्लिक करने पर बैकग्राउंड बदलें और रंग फेंकें
+        window.addEventListener('click', (e) => {
+            // बैकग्राउंड का रंग बदलें
+            const randomBG = holiColors[Math.floor(Math.random() * holiColors.length)];
+            document.body.style.backgroundColor = randomBG;
+
+            // धब्बे बनाएं
+            for(let i=0; i<4; i++) {
+                createSplash(e.clientX + (Math.random()-0.5)*100, e.clientY + (Math.random()-0.5)*100);
+            }
+        });
+
+        function createSplash(x, y) {
+            const p = document.createElement('div');
+            p.className = 'paint';
+            const size = Math.random() * 100 + 50 + 'px';
+            p.style.width = size;
+            p.style.height = size;
+            p.style.left = x - parseFloat(size)/2 + 'px';
+            p.style.top = y - parseFloat(size)/2 + 'px';
+            p.style.backgroundColor = splashColors[Math.floor(Math.random() * splashColors.length)];
+            p.style.borderRadius = `${Math.random()*40+20}% ${Math.random()*40+20}% ${Math.random()*40+20}% ${Math.random()*40+20}%`;
+            
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), 2000);
+        }
+
+        // 3. लिंक जनरेशन
+        function createLink() {
+            const n = document.getElementById('name').value;
+            if(n) {
+                const url = window.location.origin + window.location.pathname + "?naam=" + encodeURIComponent(n);
+                document.getElementById('linkBox').innerHTML = `इसे कॉपी करें और सबको भेजें:<br><strong>${url}</strong>`;
+            } else {
+                alert("नाम तो लिखिए!");
+            }
+        }
+
+        // ऑटो रंग (शुरुआत के लिए)
+        setInterval(() => {
+            const rx = Math.random() * window.innerWidth;
+            const ry = Math.random() * window.innerHeight;
+            createSplash(rx, ry);
+        }, 3000);
+    </script>
+</body>
+</html>
